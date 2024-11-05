@@ -4,28 +4,35 @@ import Home from "./ui/Home";
 import Cart from "./features/cart/Cart";
 import CreateOrder from "./features/order/CreateOrder";
 import Order from "./features/order/Order";
+import AppLayout from "./ui/layout/AppLayout";
 
 //Enable data fetching  or data loading react router, to declare like that
+//Data loader data actions
 const router = createBrowserRouter([
     {
-        path: "/",
-        element: <Home />,
-    },
-    {
-        path: "/menu",
-        element: <Menu />,
-    },
-    {
-        path: "/cart", //cart page
-        element: <Cart />,
-    },
-    {
-        path: "/order", //order page
-        element: <CreateOrder />,
-    },
-    {
-        path: "/order/:id", //order page
-        element: <Order />,
+        element: <AppLayout />,
+        children: [
+            {
+                path: "/",
+                element: <Home />,
+            },
+            {
+                path: "/menu",
+                element: <Menu />,
+            },
+            {
+                path: "/cart", //cart page
+                element: <Cart />,
+            },
+            {
+                path: "/order", //order page
+                element: <CreateOrder />,
+            },
+            {
+                path: "/order/:id", //order page
+                element: <Order />,
+            },
+        ],
     },
 ]);
 
