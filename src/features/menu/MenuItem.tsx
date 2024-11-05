@@ -1,16 +1,12 @@
 import { FC } from "react";
 import { formatCurrency } from "../../utils/helpers";
+import type { TMenu } from "../../services/apiRestaurant";
 
 interface IMenuItemProps {
-    id: string;
-    name: string;
-    unitPrice: string;
-    ingredients: string;
-    soldOut: string;
-    imageUrl: string;
+    pizza: TMenu;
 }
 
-const MenuItem: FC<{ pizza: IMenuItemProps }> = ({ pizza }) => {
+const MenuItem: FC<IMenuItemProps> = ({ pizza }) => {
     const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
 
     return (
