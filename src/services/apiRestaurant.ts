@@ -24,6 +24,7 @@ export async function getOrder(id: string) {
     if (!res.ok) throw Error(`Couldn't find order #${id}`);
 
     const { data } = await res.json();
+
     return data;
 }
 
