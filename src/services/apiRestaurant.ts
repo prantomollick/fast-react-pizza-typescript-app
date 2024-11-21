@@ -9,6 +9,23 @@ export type TMenu = {
     unitPrice: number;
 };
 
+// Define the type for an individual cart item
+export interface ICartItem {
+    pizzaId: number;
+    name: string;
+    quantity: number;
+    unitPrice: number;
+    totalPrice: number;
+}
+
+export interface IOrder {
+    customer: string;
+    phone: string;
+    address: string;
+    priority: boolean;
+    cart: ICartItem[];
+}
+
 export async function getMenu(): Promise<TMenu[]> {
     const res = await fetch(`${API_URL}/menu`);
 
@@ -28,7 +45,9 @@ export async function getOrder(id: string) {
     return data;
 }
 
-export async function createOrder(newOrder) {
+export async function createOrder(
+    newOrder: IOrder
+): Promise<IOrder & { id: string }> {
     try {
         const res = await fetch(`${API_URL}/order`, {
             method: "POST",

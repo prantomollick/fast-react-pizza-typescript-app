@@ -1,21 +1,12 @@
 // Test ID: IIDSAT
 
 import { LoaderFunctionArgs, useLoaderData } from "react-router-dom";
-import { getOrder, TMenu } from "../../services/apiRestaurant";
+import { getOrder, ICartItem } from "../../services/apiRestaurant";
 import {
     calcMinutesLeft,
     formatCurrency,
     formatDate,
 } from "../../utils/helpers";
-
-// Define the type for an individual cart item
-interface ICartItem {
-    pizzaId: number;
-    name: string;
-    quantity: number;
-    unitPrice: number;
-    totalPrice: number;
-}
 
 // Define the type for the cart data
 interface IOrder {
@@ -82,7 +73,6 @@ function Order() {
     } = order;
 
     const deliveryIn = calcMinutesLeft(estimatedDelivery);
-    console.log("Order Component function");
 
     return (
         <div>
