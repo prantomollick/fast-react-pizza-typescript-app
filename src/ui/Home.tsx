@@ -3,7 +3,7 @@ import CreateUser from '../features/user/CreateUser';
 
 const Home: FC = () => {
     return (
-        <div className="my-10 text-center">
+        <div className="my-10 text-center sm:my-16">
             <h1 className="mb-8 text-center text-xl font-semibold">
                 The best pizza.
                 <br />
