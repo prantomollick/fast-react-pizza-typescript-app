@@ -1,10 +1,20 @@
 import { useState } from "react";
-import { ActionFunction, Form, redirect } from "react-router-dom";
+import {
+    ActionFunction,
+    Form,
+    redirect,
+    useActionData,
+    useNavigation,
+} from "react-router-dom";
 import { createOrder, ICartItem, IOrder } from "../../services/apiRestaurant";
 
+interface IFormErrors {
+    phone?: string;
+}
+
 // https://uibakery.io/regex-library/phone-number
-const isValidPhone = (str: string) => {
-    /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
+const isValidPhone = (str: string): boolean => {
+    return /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
         str
     );
 };
@@ -35,7 +45,20 @@ const fakeCart = [
 
 const CreateOrder: React.FC = () => {
     // const [withPriority, setWithPriority] = useState(false);
+    const navigation = useNavigation();
+    const isSubmitting = navigation.state === "submitting";
+    const formErrors = useActionData() as IFormErrors;
+
     const cart = fakeCart;
+
+    // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    //     const form = event.currentTarget;
+    //     const phoneInput = form.phone.value;
+    //     if (!isValidPhone(phoneInput)) {
+    //         event.preventDefault();
+    //         alert("Please enter a valid phone number.");
+    //     }
+    // };
 
     return (
         <div>
@@ -50,8 +73,9 @@ const CreateOrder: React.FC = () => {
                 <div>
                     <label>Phone number</label>
                     <div>
-                        <input type="tel" name="phone" required />
+                        <input type="tel" name="phone" />
                     </div>
+                    {formErrors?.phone && <p>{formErrors.phone}</p>}
                 </div>
 
                 <div>
@@ -80,7 +104,9 @@ const CreateOrder: React.FC = () => {
                         name="cart"
                         value={JSON.stringify(cart)}
                     />
-                    <button>Order now</button>
+                    <button disabled={isSubmitting}>
+                        {isSubmitting ? "Placing order..." : "Order now"}
+                    </button>
                 </div>
             </Form>
         </div>
@@ -100,6 +126,17 @@ export const action: ActionFunction = async ({ request }) => {
             priority: data.priority === "on",
             cart: JSON.parse(data.cart as string) as ICartItem[],
         };
+
+        const errors: IFormErrors = {};
+        if (!isValidPhone(order.phone)) {
+            errors.phone = "Please enter a valid phone number.";
+        }
+
+        if (Object.keys(errors).length > 0) {
+            return errors;
+        }
+
+        //if everything is ok, create the order and redirect to the order page
         const newOrder = await createOrder(order);
         return redirect(`/order/${newOrder.id}`);
     } catch (error) {
